@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  web:
+    container_name: chat_app
+    build: ./app
+    volumes:
+      - type: bind
+        source: ./app/src
+        target: /go/src
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./mysql/.env
+    depends_on:
+      - db
+    networks:
+      - golang_chat_app_network
+      
+  db:
+    container_name: db
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    platform: linux/x86_64
+    ports:
+      - 3306:3306
+    env_file:
+      - ./mysql/.env
+    volumes:
+      - type: volume
+        source: mysql_chat_app_volume
+        target: /var/lib/mysql
+      - type: bind
+        source: ./mysql/init
+        target: /docker-entrypoint-initdb.d
+    networks:
+      - golang_chat_app_network
+
+volumes:
+  mysql_chat_app_volume:
+    name: mysql_chat_app_volume
+
+networks:
+  golang_chat_app_network:
+    external: true
