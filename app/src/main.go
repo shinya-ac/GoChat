@@ -1,12 +1,15 @@
 package main
 
 import (
-	"chat/app/src/article"
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
 	"time"
+
+	"github.com/shinya-ac/GoChat/article"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func open(path string, count uint) *sql.DB {
@@ -35,8 +38,9 @@ func connectDB() *sql.DB {
 }
 
 func main() {
-	fmt.Println("やぁ")
+	fmt.Println("やぁ、処理を開始するよ")
 	db := connectDB()
 	defer db.Close()
 	article.ReadAll(db)
+	fmt.Println("処理終了")
 }
