@@ -1,38 +1,9 @@
-### GOPATHを確認し、正しいディレクトリに当プロジェクトを配置する
-まずは以下のようにGOPATHを調べる
-```
-miyoshishinya@miyoshiyanoAir2 chat % go env GOPATH
-/Users/miyoshishinya/go
-```
-→`/Users/miyoshishinya/go`だとわかる
-このディレクトリ配下にsrcフォルダを作成する
-
-```
-cd /Users/miyoshishinya/go
-mkdir src
-```
-
-そのsrc配下に当プロジェクトをcloneしてくる
-
-もしGOPATHが設定されていない場合は`~/.zshrc`にGOPATHの設定を書き込む
-ちなみに僕のGOPATHの設定は以下のようになっている
-```
-miyoshishinya@miyoshiyanoAir2 chat % cat ~/.zshrc
-GOPATH=$HOME/go
-PATH=$PATH:$HOME/go/bin:$GOPATH/bin:
-PATH=$PATH:/Users/miyoshishinya/Desktop/OwaraiGo/src:
-PATH=$PATH://Users/miyoshishinya/go:
-
-miyoshishinya@miyoshiyanoAir2 chat % echo $HOME
-/Users/miyoshishinya
-```
-
-からの`source ~/.zshrc`を忘れず行う
-
+Goもモジュール（パッケージ）はモジュールモードで開発をする
+（モジュールモードとGOPATHモードの違いは(こちら)[https://qiita.com/fetaro/items/31b02b940ce9ec579baf#%E6%8E%A2%E3%81%97%E3%81%AB%E8%A1%8C%E3%81%8F%E5%A0%B4%E6%89%80%E3%81%AF%E3%81%A9%E3%81%93%E3%81%8B-2]を参考に。）
 
 ディレクトリに以下のファイルとフォルダがあるのを確認
 ```
-go_docker
+chat
 ├── docker-compose.yml
 ├── app
 │   ├── Dockerfile
@@ -40,7 +11,7 @@ go_docker
 │       ├── article
 │       │   └── article.go
 │       ├── go.mod
-│       ├── //go.sum
+│       ├── go.sum
 │       └── main.go
 └── mysql
     ├── .env
@@ -53,3 +24,21 @@ go_docker
 create_table.shファイルのパーミッションを645にする（末尾を5にすることでこのテーブルを作成してくれるシェルをgoが実行できるようにする）
 
 参考：https://zenn.dev/ajapa/articles/443c396a2c5dd1
+
+```
+go mod tidy
+
+docker-compose up -d
+docker-compose build
+```
+
+Dockerファイルをいじった時
+```
+docker-compose down
+docker images
+docker rmi chat_web
+docker-compose up -d 
+docker-compose build
+docker-compose logs
+docker-compose ps
+```
