@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/shinya-ac/GoChat/article"
+	"github.com/shinya-ac/GoChat/domain"
 	"github.com/shinya-ac/GoChat/handler"
 	_ "github.com/shinya-ac/GoChat/handler"
 
@@ -63,10 +64,12 @@ func main() {
 	fmt.Println("処理終了")
 	fmt.Println("webサーバー起動開始")
 	//↓一つ目のハンドラ。これは「/」のパスに割り当てた静的ファイルを配信する部分
-	files := http.FileServer(http.Dir("public"))
-	http.Handle("/", files)
-	// 「http://localhost:3000/ws」と言うリクエストが来た際はhttp通信をsocketにアップグレードする
-	http.HandleFunc("/ws", handler.NewWebsocketHandler().Handle)
+	// files := http.FileServer(http.Dir("public"))
+	// http.Handle("/", files)
+	hub := domain.NewHub()
+	go hub.RunLoop()
+	// 「http://localhost:8080/ws」と言うリクエストが来た際はhttp通信をsocketにアップグレードする
+	http.HandleFunc("/ws", handler.NewWebsocketHandler(hub).Handle)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Panicln("Serve Error:", err)
