@@ -1,4 +1,5 @@
 FROM golang:1.19
+ENV TZ=Asia/Tokyo
 
 WORKDIR /app/src
 
